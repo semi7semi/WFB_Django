@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strona główna</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<h1><a href="add_unit/">Dodaj nowa jednostke</a></h1>
+
+    <h1>WFB Battle Calculator</h1>
+        <form action="" method="POST">
+            <label for="name">Wybierz jednostke:</label>
+            <select id="name" name="name">
+                {% for unit in units_list %}
+                <option value="{{ unit.id }}">{{ unit.name }}</option>
+                {% endfor %}
+            </select><br>
+            <label for="att">Podaj ilosc atakow:</label>
+            <input type="number" id="att" name="attacks"><br>
+
+            <button type="submit" name="option" value="fight">Walka!</button>
+            <button type="submit" name="option" value="delete">Usun</button>
+        {% csrf_token %}
+        </form>
+
+</body>
+</html>

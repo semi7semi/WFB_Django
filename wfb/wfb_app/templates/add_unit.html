@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Dodaj Jedostke</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Dodawanie Jednostek</h1>
+    {% if error %}
+    <h1>{{ error }}</h1>
+    {% else %}
+        <form action="" method="POST">
+            <label for="name">Nazwa Jednostki</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="offensive">Offensive Skill:</label><br>
+            <input type="number" id="offensive" name="offensive" ><br>
+            <label for="strength">Sila:</label><br>
+            <input type="number" id="strength" name="strength" ><br>
+            <label for="ap">Armour Piercing:</label><br>
+            <input type="number" id="ap" name="ap" ><br>
+            <label for="reflex">Czy ma Lightning Reflexes:</label><br>
+            <input type="checkbox" id="reflex" name="reflex" ><br>
+
+            <button type="submit" >Dodaj</button>
+        {% csrf_token %}
+        </form>
+    {% endif %}
+</body>
+</html>
