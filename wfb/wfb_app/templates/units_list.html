@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Lista Jednostek</title>
+
+</head>
+<body>
+<h1>Lista</h1>
+
+        <table style="border: 2px solid black">
+            <tr>
+                <th>Nazwa jednostki</th>
+                <th>Ofensive Skill</th>
+                <th>Strength</th>
+                <th>AP</th>
+                <th>Lightning Reflex</th>
+            </tr>
+            {% for unit in units_list %}
+            <tr>
+                <td>{{ unit.name }}</td>
+                <td>{{ unit.offensive }}</td>
+                <td>{{ unit.strength }}</td>
+                <td>{{ unit.ap }}</td>
+                <td>{{ unit.reflex }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+<button><a href="/">Back</a></button>
+
+</body>
+</html>

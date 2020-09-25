@@ -11,16 +11,24 @@ class Index(View):
         return render(request, "index.html", {"units_list": units_list})
     def post(self, request):
         unit_id = request.POST.get('name')
-        attacks = request.POST.get('attacks')
+        attacks = int(request.POST.get('attacks'))
+        defensive = int(request.POST.get('defensive'))
         if request.POST.get('option') == "delete":
             unit = Units.objects.get(pk=unit_id)
             unit.delete()
             return redirect('/')
-
-        # zostalo do napisania miesko :)
-
         if request.POST.get('option') == "fight":
-            return HttpResponse(f"Ataki: {attacks} / {unit_id}")
+            unit = Units.objects.get(pk=unit_id)
+            if unit.reflex:
+                ref = 1 / 6
+            else:
+                ref = 0
+            if defensive < unit.offensive:
+                result = attacks * (2/3 + ref)
+                return render(request, "index.html", {"result": round(result, 2)})
+            else:
+                result = attacks * (1 / 2 + ref)
+                return render(request, "index.html", {"result": round(result, 2)})
 
 class Add_unit(View):
     def get(self, request):
@@ -44,3 +52,8 @@ class Add_unit(View):
             units.reflex = reflex
             units.save()
             return redirect('/')
+
+class List(View):
+    def get(self, request):
+        units_list = Units.objects.all()
+        return render(request, "units_list.html", {"units_list": units_list})
