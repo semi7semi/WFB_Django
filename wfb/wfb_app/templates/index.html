@@ -5,36 +5,57 @@
     <meta charset="UTF-8">
     <title>Strona główna</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        table {border-style: solid}
+        td {font-size: large}
+    </style>
 </head>
 <body>
     <h1>WFB Battle Calculator</h1>
-{% if not result %}
+{% if not hit %}
         <form action="" method="POST">
+            <button><a href="units_list/">Lista jednostke</a></button><br>
             <label for="name">Wybierz jednostke:</label>
             <select id="name" name="name">
                 {% for unit in units_list %}
                 <option value="{{ unit.id }}">{{ unit.name }}</option>
                 {% endfor %}
-            </select><br>
+            </select>
+            <button type="submit" name="option" value="delete">Usun</button>
+            <button type="submit" name="option" value="edit">Edytuj</button><br>
             <label for="att">Podaj ilosc atakow:</label>
-            <input type="number" id="att" name="attacks"><br>
-            <label for="def">Podaj Defensive Skill:</label>
-            <input type="number" id="def" name="defensive"><br>
+            <input type="number" id="att" name="attacks" min="1" value="10"><br>
+            <label for="def">Podaj Defensive Skill przeciwnika:</label>
+            <input type="number" id="def" name="defensive" min="1" value="4"><br>
+            <label for="res">Podaj Resistance przeciwnika:</label>
+            <input type="number" id="res" name="resistance" min="1" value="3"><br>
 
             <button type="submit" name="option" value="fight">Walka!</button>
-            <button type="submit" name="option" value="delete">Usun</button>
         {% csrf_token %}
         </form>
 {% else %}
         <table>
             <tr>
                 <th>Trafienia</th>
-                <td>{{ result }}</td>
+                <td>{{ hit }}</td>
             </tr>
+            <tr>
+                <th>Zadane rany</th>
+                <td>{{ wounds }}</td>
+            </tr>
+            <tr>
+                <th>Po armour save</th>
+            </tr>
+            {% for i in arm %}
+            <tr>
+                <td>Armour: </td>
+                <td>{{ i }}</td>
+            </tr>
+            {% endfor %}
         </table><br>
 {% endif %}
-    <button><a href="add_unit/">Dodaj nowa jednostke</a></button><br>
-    <button><a href="units_list/">Lista jednostke</a></button><br>
+
+
     <button><a href="/">Back</a></button><br>
 
 </body>

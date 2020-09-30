@@ -24,11 +24,16 @@
                 <td>{{ unit.offensive }}</td>
                 <td>{{ unit.strength }}</td>
                 <td>{{ unit.ap }}</td>
-                <td>{{ unit.reflex }}</td>
+                {% if unit.reflex %}
+                    <td style="color: green">Tak</td>
+                {% else %}
+                    <td style="color: red">Nie</td>
+                {% endif %}
+
             </tr>
             {% endfor %}
         </table>
-
+<button><a href="/add_unit/">Dodaj nowa jednostke</a></button><br>
 <button><a href="/">Back</a></button>
 
 </body>

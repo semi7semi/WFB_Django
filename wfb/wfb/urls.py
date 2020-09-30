@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from wfb_app.views import Index, Add_unit, List
+from wfb_app.views import Index, Add_unit, List, Edit_unit
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Index.as_view()),
     path('add_unit/', Add_unit.as_view()),
     path('units_list/', List.as_view()),
+    path('edit_unit/<int:id>/', Edit_unit.as_view()),
 
 ]

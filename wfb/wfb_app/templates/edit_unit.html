@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Edytuj Jedostke</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Edytowanie Jednostek</h1>
+    {% if error %}
+    <h1>{{ error }}</h1>
+    {% else %}
+    <h3>Nazwa jednostki: {{ unit.name }}</h3>
+        <form action="" method="POST">
+            <label for="offensive">Offensive Skill:</label><br>
+            <input type="number" id="offensive" name="offensive" min="1" value="{{ unit.offensive }}"><br>
+            <label for="strength">Sila:</label><br>
+            <input type="number" id="strength" name="strength" min="1" value="{{ unit.strength }}"><br>
+            <label for="ap">Armour Piercing:</label><br>
+            <input type="number" id="ap" name="ap" min="0" value="{{ unit.ap }}"><br>
+            <label for="reflex">Czy ma Lightning Reflexes:</label><br>
+            <input type="checkbox" id="reflex" name="reflex" {% if unit.reflex == True %} checked {% endif %}"><br>
+
+            <button type="submit" >Edytuj</button>
+        {% csrf_token %}
+        </form>
+    {% endif %}
+</body>
+</html>
