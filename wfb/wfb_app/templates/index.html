@@ -6,8 +6,8 @@
     <title>Strona główna</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        table {border-style: solid}
-        td {font-size: large}
+        table, th, td {font-size: 20px; border-style: solid; border-width: 1px; border-collapse: collapse; padding: 10px}
+        .data {border-style: solid; border-width: 1px;}
     </style>
 </head>
 <body>
@@ -26,15 +26,17 @@
             <label for="att">Podaj ilosc atakow:</label>
             <input type="number" id="att" name="attacks" min="1" value="10"><br>
             <label for="def">Podaj Defensive Skill przeciwnika:</label>
-            <input type="number" id="def" name="defensive" min="1" value="4"><br>
+            <input type="number" id="def" name="defensive" min="1" ><br>
             <label for="res">Podaj Resistance przeciwnika:</label>
-            <input type="number" id="res" name="resistance" min="1" value="3"><br>
+            <input type="number" id="res" name="resistance" min="1" ><br>
 
             <button type="submit" name="option" value="fight">Walka!</button>
         {% csrf_token %}
         </form>
 {% else %}
+    <h3>{{ unit.name }}</h3>
         <table>
+
             <tr>
                 <th>Trafienia</th>
                 <td>{{ hit }}</td>
@@ -44,14 +46,18 @@
                 <td>{{ wounds }}</td>
             </tr>
             <tr>
-                <th>Po armour save</th>
+                <th>Armour Save: </th>
+                {% for save in saves %}
+                <td class="data">{{ save }}</td>
+                {% endfor %}
             </tr>
-            {% for i in arm %}
             <tr>
-                <td>Armour: </td>
-                <td>{{ i }}</td>
+                <th>Rany: </th>
+                {% for j in arm %}
+                <td class="data">{{ j }}</td>
+                {% endfor %}
             </tr>
-            {% endfor %}
+
         </table><br>
 {% endif %}
 

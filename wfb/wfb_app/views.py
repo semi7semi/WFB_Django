@@ -58,19 +58,25 @@ class Index(View):
             if defensive < unit.offensive:
                 hit = attacks * (2/3 + ref)
                 wounds = towound(hit, unit.strength, resistance)
+                saves = ["0", "6+", "5+", "4+", "3+", "2+", "1+"]
                 arm = []
-                for armour in range(1, 7):
+                for armour in range(0, 7):
                     wounds_after_armour = afterarmour(unit.ap, armour, wounds)
                     arm.append(wounds_after_armour)
-                return render(request, "index.html", {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm})
+                return render(request, "index.html",
+                              {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm, "saves": saves,
+                               "unit": unit})
             else:
                 hit = attacks * (1 / 2 + ref)
                 wounds = towound(hit, unit.strength, resistance)
+                saves = ["none", "6+", "5+", "4+", "3+", "2+", "1+"]
                 arm = []
-                for armour in range(1, 7):
+                for armour in range(0, 7):
                     wounds_after_armour = afterarmour(unit.ap, armour, wounds)
                     arm.append(wounds_after_armour)
-                return render(request, "index.html", {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm})
+                return render(request, "index.html",
+                              {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm, "saves": saves,
+                               "unit": unit})
 
 
 
