@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from wfb_app.views import Index, Add_unit, List, Edit_unit
+from wfb_app.views import Index, Add_unit, List, Edit_unit, Calc
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,6 @@ urlpatterns = [
     path('add_unit/', Add_unit.as_view()),
     path('units_list/', List.as_view()),
     path('edit_unit/<int:id>/', Edit_unit.as_view()),
+    path('calculator/', Calc.as_view()),
 
 ]

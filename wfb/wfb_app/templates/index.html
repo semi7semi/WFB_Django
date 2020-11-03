@@ -1,68 +1,65 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Strona główna</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        table, th, td {font-size: 20px; border-style: solid; border-width: 1px; border-collapse: collapse; padding: 10px}
-        .data {border-style: solid; border-width: 1px;}
-    </style>
-</head>
-<body>
-    <h1>WFB Battle Calculator</h1>
-{% if not hit %}
-        <form action="" method="POST">
-            <button><a href="units_list/">Lista jednostke</a></button><br>
-            <label for="name">Wybierz jednostke:</label>
-            <select id="name" name="name">
-                {% for unit in units_list %}
-                <option value="{{ unit.id }}">{{ unit.name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" name="option" value="delete">Usun</button>
-            <button type="submit" name="option" value="edit">Edytuj</button><br>
-            <label for="att">Podaj ilosc atakow:</label>
-            <input type="number" id="att" name="attacks" min="1" value="10"><br>
-            <label for="def">Podaj Defensive Skill przeciwnika:</label>
-            <input type="number" id="def" name="defensive" min="1" ><br>
-            <label for="res">Podaj Resistance przeciwnika:</label>
-            <input type="number" id="res" name="resistance" min="1" ><br>
+{% extends "__base__.html" %}
+{% block title %}{% endblock title %}
+{% block content %}
+                <div class="dashboard-header m-4">
+                    <div class="dashboard-menu">
+                        <div class="menu-item border-dashed">
+                            <a href="">
+                                <i class="far fa-plus-square icon-plus-square"></i>
+                                <span class="title">Dodaj klubowicza</span>
+                            </a>
+                        </div>
+                        <div class="menu-item border-dashed">
+                            <a href="">
+                                <i class="far fa-plus-square icon-plus-square"></i>
+                                <span class="title">Dodaj wyniki bitwy</span>
+                            </a>
+                        </div>
+                        <div class="menu-item border-dashed">
+                            <a href="">
+                                <i class="far fa-plus-square icon-plus-square"></i>
+                                <span class="title">funkc 3</span>
+                            </a>
+                        </div>
+                    </div>
 
-            <button type="submit" name="option" value="fight">Walka!</button>
-        {% csrf_token %}
-        </form>
-{% else %}
-    <h3>{{ unit.name }}</h3>
-        <table>
+                    <div class="dashboard-alerts">
+                        <div class="alert-item alert-info">
+                            <i class="fas icon-circle fa-info-circle"></i>
+                            <span class="font-weight-bold">Liczba graczy: 10</span>
+                        </div>
+                        <div class="alert-item alert-light">
+                            <i class="far icon-calendar fa-calendar-alt"></i>
+                            <span class="font-weight-bold">Liczba gier: 100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-4 p-4 border-dashed">
+                    <h2 class="dashboard-content-title">
+                        <span>Pieciu najlepszych</span> Semi, Semi, semi, semi, semi
+                    </h2>
+<!--                    {% for day in days %}-->
+<!--                    <table class="table">-->
+<!--                        <thead>-->
 
-            <tr>
-                <th>Trafienia</th>
-                <td>{{ hit }}</td>
-            </tr>
-            <tr>
-                <th>Zadane rany</th>
-                <td>{{ wounds }}</td>
-            </tr>
-            <tr>
-                <th>Armour Save: </th>
-                {% for save in saves %}
-                <td class="data">{{ save }}</td>
-                {% endfor %}
-            </tr>
-            <tr>
-                <th>Rany: </th>
-                {% for j in arm %}
-                <td class="data">{{ j }}</td>
-                {% endfor %}
-            </tr>
-
-        </table><br>
-{% endif %}
+<!--                            <tr class="d-flex">-->
+<!--                                <th class="col-2">{{day.name.name}}</th>-->
+<!--                                <th class="col-8"></th>-->
+<!--                                <th class="col-2"></th>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        {% for meal in day.meals %}-->
+<!--                        <tbody>-->
+<!--                            <tr class="d-flex">-->
+<!--                                <td class="col-2">{{meal.meal_name}}</td>-->
+<!--                                <td class="col-8">{{meal.recipe.name}}</td>-->
+<!--                                <td class="col-2"><a href=""><button type="button" class="btn btn-primary rounded-0">Szczegóły</button></a></td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+<!--                        {% endfor %}-->
+<!--                    </table>-->
+<!--                    {% endfor %}-->
+<!--                </div>-->
+{% endblock content %}
 
 
-    <button><a href="/">Back</a></button><br>
-
-</body>
-</html>

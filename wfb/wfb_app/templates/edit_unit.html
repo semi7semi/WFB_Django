@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <title>Edytuj Jedostke</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends "__base__.html" %}
+{% block title %}{% endblock %}
+{% block content %}
     <h1>Edytowanie Jednostek</h1>
     {% if error %}
     <h1>{{ error }}</h1>
@@ -27,5 +20,4 @@
         {% csrf_token %}
         </form>
     {% endif %}
-</body>
-</html>
+{% endblock content %}

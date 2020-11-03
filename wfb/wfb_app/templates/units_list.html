@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Lista Jednostek</title>
-
-</head>
-<body>
+{% extends "__base__.html" %}
+{% block title %}{% endblock %}
+{% block content %}
 <h1>Lista</h1>
 
         <table style="border: 2px solid black">
@@ -36,5 +29,4 @@
 <button><a href="/add_unit/">Dodaj nowa jednostke</a></button><br>
 <button><a href="/">Back</a></button>
 
-</body>
-</html>
+{% endblock content %}

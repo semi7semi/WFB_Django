@@ -35,8 +35,14 @@ def afterarmour(ap, arm, wounds):
 
 class Index(View):
     def get(self, request):
+        return render(request, "index.html")
+
+
+class Calc(View):
+    def get(self, request):
         units_list = Units.objects.all()
-        return render(request, "index.html", {"units_list": units_list})
+        return render(request, "calculator.html", {"units_list": units_list})
+
     def post(self, request):
         unit_id = request.POST.get('name')
         attacks = int(request.POST.get('attacks'))
@@ -48,7 +54,7 @@ class Index(View):
             return redirect('/')
         if request.POST.get('option') == "edit":
             unit = Units.objects.get(pk=unit_id)
-            return redirect(f'edit_unit/{unit.id}/')
+            return redirect(f'/edit_unit/{unit.id}/')
         if request.POST.get('option') == "fight":
             unit = Units.objects.get(pk=unit_id)
             if unit.reflex:
@@ -56,14 +62,14 @@ class Index(View):
             else:
                 ref = 0
             if defensive < unit.offensive:
-                hit = attacks * (2/3 + ref)
+                hit = attacks * (2 / 3 + ref)
                 wounds = towound(hit, unit.strength, resistance)
                 saves = ["0", "6+", "5+", "4+", "3+", "2+", "1+"]
                 arm = []
                 for armour in range(0, 7):
                     wounds_after_armour = afterarmour(unit.ap, armour, wounds)
                     arm.append(wounds_after_armour)
-                return render(request, "index.html",
+                return render(request, "calculator.html",
                               {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm, "saves": saves,
                                "unit": unit})
             else:
@@ -74,11 +80,9 @@ class Index(View):
                 for armour in range(0, 7):
                     wounds_after_armour = afterarmour(unit.ap, armour, wounds)
                     arm.append(wounds_after_armour)
-                return render(request, "index.html",
+                return render(request, "calculator.html",
                               {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm, "saves": saves,
                                "unit": unit})
-
-
 
 class Edit_unit(View):
     def get(self, request, id):
