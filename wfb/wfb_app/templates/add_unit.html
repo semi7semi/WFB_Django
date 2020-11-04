@@ -6,18 +6,18 @@
     <h1>{{ error }}</h1>
     {% else %}
         <form action="" method="POST">
-            <label for="name">Nazwa Jednostki</label><br>
-            <input type="text" id="name" name="name"><br>
-            <label for="offensive">Offensive Skill:</label><br>
-            <input type="number" id="offensive" name="offensive" ><br>
-            <label for="strength">Sila:</label><br>
-            <input type="number" id="strength" name="strength" ><br>
-            <label for="ap">Armour Piercing:</label><br>
-            <input type="number" id="ap" name="ap" ><br>
-            <label for="reflex">Czy ma Lightning Reflexes:</label><br>
-            <input type="checkbox" id="reflex" name="reflex" ><br>
+            <label class="mt-4 ml-4 mr-4" for="name">Nazwa Jednostki</label>
+            <input class="p-1" type="text" id="name" name="name"><br>
+            <label class="mt-4 ml-4 mr-4" for="offensive">Offensive Skill:</label>
+            <input class="p-1" type="number" id="offensive" name="offensive" ><br>
+            <label class="mt-4 ml-4 mr-4" for="strength">Sila:</label>
+            <input class="p-1" type="number" id="strength" name="strength" ><br>
+            <label class="mt-4 ml-4 mr-4" for="ap">Armour Piercing:</label>
+            <input class="p-1" type="number" id="ap" name="ap" ><br>
+            <label class="mt-4 ml-4 mr-4" for="reflex">Czy ma Lightning Reflexes:</label>
+            <input class="p-1" type="checkbox" id="reflex" name="reflex" ><br>
 
-            <button type="submit" >Dodaj</button>
+            <button class="btn btn-secondary rounded-1" type="submit" >Dodaj</button>
         {% csrf_token %}
         </form>
     {% endif %}
