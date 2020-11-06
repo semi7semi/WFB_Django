@@ -1,4 +1,4 @@
-{% extends "__base__.html" %}
+{% extends "base.html" %}
 {% block title %}{% endblock %}
 {% block content %}
     <h1>Dodawanie Jednostek</h1>
@@ -16,6 +16,12 @@
             <input class="p-1" type="number" id="ap" name="ap" ><br>
             <label class="mt-4 ml-4 mr-4" for="reflex">Czy ma Lightning Reflexes:</label>
             <input class="p-1" type="checkbox" id="reflex" name="reflex" ><br>
+            <label class="mt-4 ml-4 mr-4" for="army">Wybierz armie:</label>
+            <select class="p-1" id="army" name="army">
+                {% for army in armys %}
+                <option class="btn btn-primary rounded-0" value="{{ army.id }}">{{ army.name }}</option>
+                {% endfor %}
+            </select>
 
             <button class="btn btn-secondary rounded-1" type="submit" >Dodaj</button>
         {% csrf_token %}

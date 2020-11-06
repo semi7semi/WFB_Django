@@ -1,4 +1,4 @@
-{% extends "__base__.html" %}
+{% extends "base.html" %}
 {% block title %}{% endblock %}
 {% block content %}
 <h1>Lista</h1>
@@ -10,6 +10,7 @@
                 <th>Strength</th>
                 <th>AP</th>
                 <th>Lightning Reflex</th>
+                <th>Army</th>
             </tr>
             {% for unit in units_list %}
             <tr>
@@ -22,6 +23,7 @@
                 {% else %}
                     <td style="color: red">Nie</td>
                 {% endif %}
+                <td>{{ unit.army.name }}</td>
 
             </tr>
             {% endfor %}

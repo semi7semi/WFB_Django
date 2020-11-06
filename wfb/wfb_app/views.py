@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 
-from wfb_app.models import Units
+from wfb_app.models import Units, Armys
 
 
 def towound(hit, st, res):
@@ -110,7 +110,8 @@ class Edit_unit(View):
 
 class Add_unit(View):
     def get(self, request):
-        return render(request, "add_unit.html")
+        armys = Armys.objects.all()
+        return render(request, "add_unit.html", {"armys": armys})
     def post(self, request):
         name = request.POST.get('name')
         offensive = request.POST.get('offensive')
@@ -118,6 +119,8 @@ class Add_unit(View):
         ap = request.POST.get('ap')
         reflex_str = request.POST.get('reflex')
         reflex = reflex_str == "on"
+        army_id = int(request.POST.get('army'))
+        print(army_id)
         if not name or not offensive or not strength or not ap:
             error = "Wypelnij wszystkie pola"
             return render(request, "add_unit.html", {"error": error})
@@ -128,6 +131,7 @@ class Add_unit(View):
             units.strength = strength
             units.ap = ap
             units.reflex = reflex
+            units.army = Armys.objects.get(pk=army_id)
             units.save()
             return redirect('/')
 
