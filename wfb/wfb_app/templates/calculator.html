@@ -8,7 +8,7 @@
             <label class="mt-4 ml-4 mr-4" for="name">Wybierz jednostke:</label>
             <select class="p-1" id="name" name="name">
                 {% for unit in units_list %}
-                <option type="button" class="btn btn-primary rounded-0" value="{{ unit.id }}">{{ unit.name }}</option>
+                <option class="btn btn-primary rounded-0" value="{{ unit.id }}">{{ unit.name }}</option>
                 {% endfor %}
             </select>
             <button class="btn btn-secondary rounded-1" type="submit" name="option" value="delete">Usun</button>
