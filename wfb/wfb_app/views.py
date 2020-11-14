@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views import View
 
+from wfb_app.forms import AddUnit
 from wfb_app.models import Units, Armys
 
 
@@ -42,7 +43,6 @@ class Calc(View):
     def get(self, request):
         units_list = Units.objects.all()
         return render(request, "calculator.html", {"units_list": units_list})
-
     def post(self, request):
         unit_id = request.POST.get('name')
         attacks = int(request.POST.get('attacks'))
@@ -84,58 +84,85 @@ class Calc(View):
                               {"hit": round(hit, 2), "wounds": round(wounds, 2), "arm": arm, "saves": saves,
                                "unit": unit})
 
-class Edit_unit(View):
-    def get(self, request, id):
-        unit = Units.objects.get(pk=id)
-        return render(request, "edit_unit.html", {"unit": unit})
-    def post(self, request, id):
-        unit = Units.objects.get(pk=id)
-        offensive = request.POST.get('offensive')
-        strength = request.POST.get('strength')
-        ap = request.POST.get('ap')
-        reflex_str = request.POST.get('reflex')
-        reflex = reflex_str == "on"
-        if not offensive or not strength or not ap:
-            error = "Wypelnij wszystkie pola"
-            return render(request, "edit_unit.html", {"error": error})
-        else:
-            unit.offensive = offensive
-            unit.strength = strength
-            unit.ap = ap
-            unit.reflex = reflex
-            unit.save()
-            return redirect('/')
-
-
-
-class Add_unit(View):
-    def get(self, request):
-        armys = Armys.objects.all()
-        return render(request, "add_unit.html", {"armys": armys})
-    def post(self, request):
-        name = request.POST.get('name')
-        offensive = request.POST.get('offensive')
-        strength = request.POST.get('strength')
-        ap = request.POST.get('ap')
-        reflex_str = request.POST.get('reflex')
-        reflex = reflex_str == "on"
-        army_id = int(request.POST.get('army'))
-        print(army_id)
-        if not name or not offensive or not strength or not ap:
-            error = "Wypelnij wszystkie pola"
-            return render(request, "add_unit.html", {"error": error})
-        else:
-            units = Units()
-            units.name = name
-            units.offensive = offensive
-            units.strength = strength
-            units.ap = ap
-            units.reflex = reflex
-            units.army = Armys.objects.get(pk=army_id)
-            units.save()
-            return redirect('/')
 
 class List(View):
     def get(self, request):
-        units_list = Units.objects.all()
+        units_list = Units.objects.all().order_by("name")
         return render(request, "units_list.html", {"units_list": units_list})
+
+
+class AddUnitView(View):
+    def get(self, request):
+        form = AddUnit()
+        ctx = {"form": form}
+        return render(request, "add_unit.html", ctx)
+    def post(self, request):
+        form = AddUnit(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("units-list")
+
+
+class EditUnitView(View):
+    def get(self, request, id):
+        unit = Units.objects.get(pk=id)
+        form = AddUnit(instance=unit)
+        ctx = {"form": form}
+        return render(request, "edit_unit.html", ctx)
+    def post(self, request, id):
+        unit = get_object_or_404(Units, pk=id)
+        form = AddUnit(request.POST, instance=unit)
+        if form.is_valid():
+            form.save()
+            return redirect("units-list")
+
+
+# class Edit_unit(View):
+#     def get(self, request, id):
+#         unit = Units.objects.get(pk=id)
+#         return render(request, "edit_unit.html", {"unit": unit})
+#     def post(self, request, id):
+#         unit = Units.objects.get(pk=id)
+#         offensive = request.POST.get('offensive')
+#         strength = request.POST.get('strength')
+#         ap = request.POST.get('ap')
+#         reflex_str = request.POST.get('reflex')
+#         reflex = reflex_str == "on"
+#         if not offensive or not strength or not ap:
+#             error = "Wypelnij wszystkie pola"
+#             return render(request, "edit_unit.html", {"error": error})
+#         else:
+#             unit.offensive = offensive
+#             unit.strength = strength
+#             unit.ap = ap
+#             unit.reflex = reflex
+#             unit.save()
+#             return redirect('/')
+
+
+# class Add_unit(View):
+#     def get(self, request):
+#         armys = Armys.objects.all()
+#         return render(request, "add_unit.html", {"armys": armys})
+#     def post(self, request):
+#         name = request.POST.get('name')
+#         offensive = request.POST.get('offensive')
+#         strength = request.POST.get('strength')
+#         ap = request.POST.get('ap')
+#         reflex_str = request.POST.get('reflex')
+#         reflex = reflex_str == "on"
+#         army_id = int(request.POST.get('army'))
+#         print(army_id)
+#         if not name or not offensive or not strength or not ap:
+#             error = "Wypelnij wszystkie pola"
+#             return render(request, "add_unit.html", {"error": error})
+#         else:
+#             units = Units()
+#             units.name = name
+#             units.offensive = offensive
+#             units.strength = strength
+#             units.ap = ap
+#             units.reflex = reflex
+#             units.army = Armys.objects.get(pk=army_id)
+#             units.save()
+#             return redirect('/')
