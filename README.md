@@ -5,7 +5,8 @@
 1. Dodawanie do DB jednostek. <br>
 2. Symulowanie walki. <br>
 3. Wynikiem jest ilosc zadanych ran. <br>
-4. 
+4. Dodany CSS
+5. ModelForm dla edycji i dodawania jednostek
 
 ## Opis
 
@@ -21,6 +22,8 @@ Zalogowani beda mogli dodawac nowe jednostki do bazy w kalkulatorze.
 * results - widok z pelnym rankingiem, mozliwosc sortowania i dodania nowego wyniku, szczegoly gracza <br>
 * kalkulator - formularz obslugujacy sumulacje walki, podajemy dane wejsciowe i otrzymujemy wynik. <br>
 * lista jednostek - lista wszsytkich jednostek utworzynych przez uzytkownikow <br>
+* lista graczy = list wszsytkich graczy <br>
+* dodawanie nowego gracza - dodaj nowego gracza do rankingu
 
 dla zalogowanych: <br>
 
