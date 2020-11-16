@@ -7,6 +7,8 @@
 3. Wynikiem jest ilosc zadanych ran. <br>
 4. Dodany CSS
 5. ModelForm dla edycji i dodawania jednostek
+6. Dodane brakujace modele.
+7. Dodawanie uzytkownika
 
 ## Opis
 
@@ -22,8 +24,9 @@ Zalogowani beda mogli dodawac nowe jednostki do bazy w kalkulatorze.
 * results - widok z pelnym rankingiem, mozliwosc sortowania i dodania nowego wyniku, szczegoly gracza <br>
 * kalkulator - formularz obslugujacy sumulacje walki, podajemy dane wejsciowe i otrzymujemy wynik. <br>
 * lista jednostek - lista wszsytkich jednostek utworzynych przez uzytkownikow <br>
-* lista graczy = list wszsytkich graczy <br>
+* lista graczy - list wszsytkich graczy <br>
 * dodawanie nowego gracza - dodaj nowego gracza do rankingu
+* edycja gracza - edytuj dane uzytkownika
 
 dla zalogowanych: <br>
 
@@ -35,6 +38,11 @@ dla zalogowanych: <br>
 User - <br>
 * login(str), <br>
 * password(str) (dane uzytkownika)<br>
+* user_armies (relacja W:W przez UserArmies) <br>
+
+UserArmies - <br>
+* user - (forein key do User) <br>
+* army - (forein key do Armys) <br>
 
 GameResults - <br>
 * game_rank(str), 3 mozliwosci choices=("master", "local", "home")
@@ -42,7 +50,8 @@ GameResults - <br>
 * objective(bool), <br>
 * objective_type(foreinkey do Objectives), <br>
 * user(foreinkey do User)<br>
-* oponenet(str), imie przeciwnika
+* oponenet(str), imie przeciwnika <br>
+* date(date), data dodania wyniku <br>
 
 Army - <br>
 * name(str), <br>
@@ -54,7 +63,7 @@ Units - <br>
 * army (relacja 1:wielu do modelu Army (kazda Armia moze miec wiele Jednostek)),<br>
 
 Objectives - <br>
-* name(str)
+* name(int, choices(6 mozliwosci))<br>
 
 
 

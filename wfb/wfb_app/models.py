@@ -19,14 +19,42 @@ class Units(models.Model):
 
 
 class User(models.Model):
-    pass
+    login = models.CharField(max_length=64, unique=True)
+    password = models.CharField(max_length=128)
+    user_armies = models.ManyToManyField(Armys, through="UserArmies")
+
+
+class UserArmies(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    army = models.ForeignKey(Armys, on_delete=models.CASCADE)
+
+
+GAME_RANK = (
+    ("master", "Master"),
+    ("local", "Local"),
+    ("home", "Home")
+)
+
+OBJ = (
+    (1, "Hold the Ground"),
+    (2, "Breakthrough"),
+    (3, "Spoils of War"),
+    (4, "King of the Hill"),
+    (5, "Capture the Flag"),
+    (6, "Secure Target")
+)
+
+class Objectives(models.Model):
+    name = models.IntegerField(choices=OBJ)
 
 
 class GameResults(models.Model):
-    pass
-
-
-
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    battle_points = models.IntegerField()
+    objective = models.BooleanField(default=False)
+    objective_type = models.ForeignKey(Objectives, on_delete=models.CASCADE)
+    game_rank = models.CharField(max_length=16, choices=GAME_RANK)
+    opponent = models.CharField(max_length=64)
+    date = models.DateField(auto_now_add=True)
 
 

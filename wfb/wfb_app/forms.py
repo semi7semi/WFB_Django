@@ -1,7 +1,7 @@
 from django import forms
 
 
-from .models import Armys, Units
+from .models import Armys, Units, User
 
 
 class AddUnit(forms.ModelForm):
@@ -29,3 +29,16 @@ class AddUnit(forms.ModelForm):
         #     "name": "Nazwa"
         # }
 
+
+class AddUser(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = "__all__"
+        labels = {
+            "login": "Podaj Login",
+            "password": "Podaj Haslo",
+            "user_armys": "Wybierz armie"
+        }
+        widgets = {
+            "password": forms.PasswordInput()
+        }

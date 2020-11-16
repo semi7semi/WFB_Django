@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views import View
 
-from wfb_app.forms import AddUnit
-from wfb_app.models import Units, Armys
+from wfb_app.forms import AddUnit, AddUser
+from wfb_app.models import Units, Armys, User, GameResults, Objectives, UserArmies
 
 
 def towound(hit, st, res):
@@ -115,6 +115,68 @@ class EditUnitView(View):
         if form.is_valid():
             form.save()
             return redirect("units-list")
+
+
+class UsersView(View):
+    def get(self, request):
+        users_list = User.objects.all()
+        user_data = []
+        for user in users_list:
+            userarmies = UserArmies.objects.filter(user=user.id)
+            user_data += [
+                {"user": user, "armies": userarmies}
+            ]
+
+        ctx = {"users_list": users_list, "user_data": user_data}
+        return render(request, "users_list.html", ctx)
+
+
+
+class AddUserView(View):
+    def get(self, request):
+        form = AddUser()
+        ctx = {"form": form}
+        return render(request, "add_user.html", ctx)
+    def post(selfself, request):
+        form = AddUser(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("main")
+
+
+class EditUserView(View):
+    def get(self, request, id):
+        user = User.objects.get(pk=id)
+        form = AddUser(instance=user)
+        ctx = {"form": form}
+        return render(request, "edit_user.html", ctx)
+
+    def post(selfself, request, id):
+        user = User.objects.get(pk=id)
+        form = AddUser(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("main")
+
+class RankingView(View):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class Edit_unit(View):
