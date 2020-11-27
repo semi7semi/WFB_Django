@@ -1,8 +1,10 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views import View
+from django.views.generic import FormView, ListView
 
-from wfb_app.forms import AddUnit, AddUser
+from wfb_app.forms import AddUnit, AddUser, LogForm, RegisterUserForm
 from wfb_app.models import Units, Armys, User, GameResults, Objectives, UserArmies
 
 
@@ -117,46 +119,89 @@ class EditUnitView(View):
             return redirect("units-list")
 
 
-class UsersView(View):
+# class UsersView(View):
+#     def get(self, request):
+#         users_list = User.objects.all()
+#         user_data = []
+#         for user in users_list:
+#             userarmies = UserArmies.objects.filter(user=user.id)
+#             user_data += [
+#                 {"user": user, "armies": userarmies}
+#             ]
+#
+#         ctx = {"users_list": users_list, "user_data": user_data}
+#         return render(request, "users_list.html", ctx)
+
+
+
+# class AddUserView(View):
+#     def get(self, request):
+#         form = AddUser()
+#         ctx = {"form": form}
+#         return render(request, "add_user.html", ctx)
+#     def post(selfself, request):
+#         form = AddUser(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("main")
+
+
+# class EditUserView(View):
+#     def get(self, request, id):
+#         user = User.objects.get(pk=id)
+#         form = AddUser(instance=user)
+#         ctx = {"form": form}
+#         return render(request, "edit_user.html", ctx)
+#
+#     def post(self, request, id):
+#         user = User.objects.get(pk=id)
+#         form = AddUser(request.POST, instance=user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("main")
+
+
+class LoginView(FormView):
+    form_class = LogForm
+    template_name = "login_form.html"
+    success_url = "/"
+
+    def form_valid(self, form):
+        username = form.cleaned_data["login"]
+        password = form.cleaned_data["password"]
+        user = authenticate(self.request, username=username, password=password)
+        if user:
+            login(self.request, user)
+            return super().form_valid(form)
+        form.add_error(None, "Zły login lub haslo")
+        return super().form_invalid(form)
+
+
+class LogoutView(View):
     def get(self, request):
-        users_list = User.objects.all()
-        user_data = []
-        for user in users_list:
-            userarmies = UserArmies.objects.filter(user=user.id)
-            user_data += [
-                {"user": user, "armies": userarmies}
-            ]
-
-        ctx = {"users_list": users_list, "user_data": user_data}
-        return render(request, "users_list.html", ctx)
+        logout(request)
+        return redirect("/")
 
 
-
-class AddUserView(View):
+class CreateUserView(View):
     def get(self, request):
-        form = AddUser()
+        form = RegisterUserForm()
         ctx = {"form": form}
-        return render(request, "add_user.html", ctx)
-    def post(selfself, request):
-        form = AddUser(request.POST)
+        return render(request, "user_form.html", ctx)
+    def post(self, request):
+        form = RegisterUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("main")
+            user = form.save()
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+        return render(request, "user_form.html", {"form": form})
 
 
-class EditUserView(View):
-    def get(self, request, id):
-        user = User.objects.get(pk=id)
-        form = AddUser(instance=user)
-        ctx = {"form": form}
-        return render(request, "edit_user.html", ctx)
+class UsersList(ListView):
+    model = User
+    context_object_name = "users"
 
-    def post(selfself, request, id):
-        user = User.objects.get(pk=id)
-        form = AddUser(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect("main")
+
 
 class RankingView(View):
     pass

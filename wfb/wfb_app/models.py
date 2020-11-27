@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Armys(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -18,14 +18,14 @@ class Units(models.Model):
     army = models.ForeignKey(Armys, on_delete=models.CASCADE, default=1)
 
 
-class User(models.Model):
-    login = models.CharField(max_length=64, unique=True)
-    password = models.CharField(max_length=128)
-    user_armies = models.ManyToManyField(Armys, through="UserArmies")
+# class User(models.Model):
+#     login = models.CharField(max_length=64, unique=True)
+#     password = models.CharField(max_length=128)
+#     user_armies = models.ManyToManyField(Armys, through="UserArmies")
 
 
 class UserArmies(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     army = models.ForeignKey(Armys, on_delete=models.CASCADE)
 
 
@@ -49,7 +49,7 @@ class Objectives(models.Model):
 
 
 class GameResults(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     battle_points = models.IntegerField()
     objective = models.BooleanField(default=False)
     objective_type = models.ForeignKey(Objectives, on_delete=models.CASCADE)

@@ -1,7 +1,8 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
-
-from .models import Armys, Units, User
+from .models import Units
 
 
 class AddUnit(forms.ModelForm):
@@ -42,3 +43,32 @@ class AddUser(forms.ModelForm):
         widgets = {
             "password": forms.PasswordInput()
         }
+
+
+class LogForm(forms.Form):
+    login = forms.CharField(max_length=64, label="Login")
+    password = forms.CharField(max_length=64, label="Haslo", widget=forms.PasswordInput)
+
+
+class RegisterUserForm(forms.ModelForm):
+    password_2 = forms.CharField(widget=forms.PasswordInput, label="Powtórz hasło")
+    class Meta:
+        model = User
+        fields = ["username", "password", "password_2", "first_name", "last_name", "email"]
+        widgets = {"password": forms.PasswordInput}
+        labels = {
+            "username": "Nickname",
+            "password": "Hasło",
+            "first_name": "Podaj imię",
+            "last_name": "Podaj nazwisko",
+            "email": "Podaj email"
+        }
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data["username"]
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("Login zajety")
+        password = cleaned_data["password"]
+        password_2 = cleaned_data["password_2"]
+        if password != password_2:
+            raise ValidationError("Hasla sie nie zgadzaja")

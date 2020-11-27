@@ -17,7 +17,21 @@
                 Aplikacja <span>WFB</span>
             </a>
          <div class="d-flex justify-content-around">
-             <h4 class="text-light mr-3">Witaj Imię</h4>
+             {% if request.user %}
+             <h4 class="text-light mr-3">Witaj {{ request.user.username }}</h4>
+             <h4 class="text-light mr-3">
+                 <a href="/login/">
+                     <span>Login</span>
+                 </a>
+                 <a href="/logout/">
+                     <span>Logout</span>
+                 </a>
+             </h4>
+             {% else %}
+             <h4 class="text-light mr-3">Witaj nieznajomy</h4>
+             {% endif %}
+
+             </h4>
          </div>
         </nav>
     </header>
