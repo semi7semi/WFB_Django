@@ -75,6 +75,9 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Objectives(models.Model):
     name = models.IntegerField(choices=OBJ)
+    
+    def __str__(self):
+        return self.name
 
 
 class GameResults(models.Model):

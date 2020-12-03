@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.views.generic import FormView, ListView
 
-from wfb_app.forms import AddUnit, LogForm, RegisterUserForm, ProfileForm
+from wfb_app.forms import AddUnit, LogForm, RegisterUserForm, ProfileForm, EditUserForm, GameResultsForm
 from wfb_app.models import Units, Armys, GameResults, Objectives
 from django.contrib.auth.models import User
 
@@ -165,7 +165,7 @@ class CreateUserView(View):
 class EditUserView(View):
     def get(selfself, request, id):
         user = User.objects.get(pk=id)
-        form = RegisterUserForm(instance=user)
+        form = EditUserForm(instance=user)
         profile_form = ProfileForm(instance=user.profile)
         return render(request, "user_form.html", {
             "form": form,
@@ -173,12 +173,12 @@ class EditUserView(View):
         })
     def post(self, request, id):
         user = User.objects.get(pk=id)
-        form = RegisterUserForm(request.POST, instance=user)
+        form = EditUserForm(request.POST, instance=user)
         profile_form = ProfileForm(request.POST, instance=user.profile)
         if form.is_valid() and profile_form.is_valid():
             form.save()
             profile_form.save()
-            return redirect("main")
+            return redirect("users-list")
 
 
 class UsersList(ListView):
@@ -186,9 +186,18 @@ class UsersList(ListView):
     context_object_name = "users"
 
 
+class RankingList(View):
+    def get(self, request):
+        ranking = GameResults.objects.all().order_by("date")
+        return render(request, "ranking_list.html", {"ranking": ranking})
 
-class RankingView(View):
-    pass
+
+class AddGameResultView(View):
+    def get(self, request):
+        form = GameResultsForm()
+        ctx = {"form": form}
+        return render(request, "ranking_form.html", ctx)
+
 
 
 

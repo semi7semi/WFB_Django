@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-from .models import Units, Profile
+from .models import Units, Profile, GameResults
 
 
 class AddUnit(forms.ModelForm):
@@ -54,3 +54,28 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ["user_army"]
         labels = {"user_army": "Wybierz Armie"}
+
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["username", "email"]
+        labels = {
+            "username": "Nickname",
+            "email": "Podaj email"
+        }
+
+
+class GameResultsForm(forms.ModelForm):
+    class Meta:
+        model = GameResults
+        fields = "__all__"
+        labels = {
+            "user": "Nick",
+            "battle_points": "Punkty",
+            "objective": "Czy Objective wykonany",
+            "objective_type": "Jaki Objective",
+            "game_rank": "Ranga turnieju",
+            "opponent": "Przeciwnik",
+            "date": "Data"
+        }

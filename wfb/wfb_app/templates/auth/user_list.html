@@ -14,7 +14,8 @@
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.profile.user_army  }}</td>
-                <td><a class="btn btn-secondary rounded-1 disabled" href="/edit_user/{{ user.id }}/">Edytuj</a></td>
+                <td><a class="btn btn-secondary rounded-1" href="/edit_user/{{ user.id }}/">Edytuj</a></td>
+                <td><a class="btn btn-secondary rounded-1 disabled" href="/delete_user/{{ user.id }}/">Usuń</a></td>
             </tr>
             {% endfor %}
         </table>

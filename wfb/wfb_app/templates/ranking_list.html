@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+<h1>Ranking</h1>
+
+        <table class="table border-bottom schedules-content">
+            <tr>
+                <th>Nickname</th>
+                <th>data1</th>
+                <th>data2</th>
+                <th>data3</th>
+                <th>data4</th>
+                <th>data5</th>
+            </tr>
+            {% for result in ranking %}
+            <tr>
+                <td>{{ result.user }}</td>
+                <td>{{ result.battle_points }}</td>
+                <td>{{ result.objective  }}</td>
+                <td>{{ result.game_rank  }}</td>
+                <td>{{ result.opponent  }}</td>
+                <td>{{ result.date  }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+<div class="row">
+    <div class="col-2">
+        <div class="nav flex-column nav-pills">
+            <a class="nav-link active" href="/">Back</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
