@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-from .models import Units
+from .models import Units, Profile
 
 
 class AddUnit(forms.ModelForm):
@@ -18,31 +18,8 @@ class AddUnit(forms.ModelForm):
             "armys": "Armia"
         }
         # widgets = {
-        #     "name": forms.CharField(attrs={"class":"mt-4 ml-4 mr-4"}),
-        #     "offensive": forms.IntegerField(attrs={"class": "mt-4 ml-4 mr-4"}),
-        #     "strength": forms.IntegerField(attrs={"class": "mt-4 ml-4 mr-4"}),
-        #     "ap": forms.IntegerField(attrs={"class": "mt-4 ml-4 mr-4"}),
-        #     "reflex": forms.CheckboxInput(attrs={"class": "mt-4 ml-4 mr-4"}),
-        #     "army": forms.ChoiceField(attrs={"class": "mt-4 ml-4 mr-4"})
+        #     "army": forms.ChoiceField()
         # }
-
-        # help_texts = {
-        #     "name": "Nazwa"
-        # }
-
-
-class AddUser(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = "__all__"
-        labels = {
-            "login": "Podaj Login",
-            "password": "Podaj Haslo",
-            "user_armys": "Wybierz armie"
-        }
-        widgets = {
-            "password": forms.PasswordInput()
-        }
 
 
 class LogForm(forms.Form):
@@ -54,21 +31,26 @@ class RegisterUserForm(forms.ModelForm):
     password_2 = forms.CharField(widget=forms.PasswordInput, label="Powtórz hasło")
     class Meta:
         model = User
-        fields = ["username", "password", "password_2", "first_name", "last_name", "email"]
+        fields = ["username", "password", "password_2", "email"]
         widgets = {"password": forms.PasswordInput}
         labels = {
             "username": "Nickname",
             "password": "Hasło",
-            "first_name": "Podaj imię",
-            "last_name": "Podaj nazwisko",
             "email": "Podaj email"
         }
-    def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data["username"]
-        if User.objects.filter(username=username).exists():
-            raise ValidationError("Login zajety")
-        password = cleaned_data["password"]
-        password_2 = cleaned_data["password_2"]
-        if password != password_2:
-            raise ValidationError("Hasla sie nie zgadzaja")
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     username = cleaned_data["username"]
+    #     if User.objects.filter(username=username).exists():
+    #         raise ValidationError("Login zajety")
+    #     password = cleaned_data["password"]
+    #     password_2 = cleaned_data["password_2"]
+    #     if password != password_2:
+    #         raise ValidationError("Hasla sie nie zgadzaja")
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["user_army"]
+        labels = {"user_army": "Wybierz Armie"}

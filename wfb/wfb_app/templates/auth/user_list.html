@@ -13,7 +13,7 @@
             <tr>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>jaka armia</td>
+                <td>{{ user.profile.user_army  }}</td>
                 <td><a class="btn btn-secondary rounded-1 disabled" href="/edit_user/{{ user.id }}/">Edytuj</a></td>
             </tr>
             {% endfor %}

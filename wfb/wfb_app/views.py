@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.views import View
 from django.views.generic import FormView, ListView
 
-from wfb_app.forms import AddUnit, AddUser, LogForm, RegisterUserForm
-from wfb_app.models import Units, Armys, User, GameResults, Objectives, UserArmies
+from wfb_app.forms import AddUnit, LogForm, RegisterUserForm, ProfileForm
+from wfb_app.models import Units, Armys, GameResults, Objectives
+from django.contrib.auth.models import User
 
 
 def towound(hit, st, res):
@@ -119,48 +120,6 @@ class EditUnitView(View):
             return redirect("units-list")
 
 
-# class UsersView(View):
-#     def get(self, request):
-#         users_list = User.objects.all()
-#         user_data = []
-#         for user in users_list:
-#             userarmies = UserArmies.objects.filter(user=user.id)
-#             user_data += [
-#                 {"user": user, "armies": userarmies}
-#             ]
-#
-#         ctx = {"users_list": users_list, "user_data": user_data}
-#         return render(request, "users_list.html", ctx)
-
-
-
-# class AddUserView(View):
-#     def get(self, request):
-#         form = AddUser()
-#         ctx = {"form": form}
-#         return render(request, "add_user.html", ctx)
-#     def post(selfself, request):
-#         form = AddUser(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("main")
-
-
-# class EditUserView(View):
-#     def get(self, request, id):
-#         user = User.objects.get(pk=id)
-#         form = AddUser(instance=user)
-#         ctx = {"form": form}
-#         return render(request, "edit_user.html", ctx)
-#
-#     def post(self, request, id):
-#         user = User.objects.get(pk=id)
-#         form = AddUser(request.POST, instance=user)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("main")
-
-
 class LoginView(FormView):
     form_class = LogForm
     template_name = "login_form.html"
@@ -186,15 +145,40 @@ class LogoutView(View):
 class CreateUserView(View):
     def get(self, request):
         form = RegisterUserForm()
-        ctx = {"form": form}
+        profile_form = ProfileForm()
+        ctx = {"form": form, "profile_form": profile_form}
         return render(request, "user_form.html", ctx)
     def post(self, request):
         form = RegisterUserForm(request.POST)
-        if form.is_valid():
+        profile_form = ProfileForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
             user = form.save()
             user.set_password(form.cleaned_data["password"])
             user.save()
-        return render(request, "user_form.html", {"form": form})
+            profile_form.save()
+            return redirect("main")
+        else:
+            ctx = {"form": form, "profile_form": profile_form}
+            return render(request, "user_form.html", ctx)
+
+
+class EditUserView(View):
+    def get(selfself, request, id):
+        user = User.objects.get(pk=id)
+        form = RegisterUserForm(instance=user)
+        profile_form = ProfileForm(instance=user.profile)
+        return render(request, "user_form.html", {
+            "form": form,
+            "profile_form": profile_form
+        })
+    def post(self, request, id):
+        user = User.objects.get(pk=id)
+        form = RegisterUserForm(request.POST, instance=user)
+        profile_form = ProfileForm(request.POST, instance=user.profile)
+        if form.is_valid() and profile_form.is_valid():
+            form.save()
+            profile_form.save()
+            return redirect("main")
 
 
 class UsersList(ListView):

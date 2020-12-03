@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'wfb.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'wfb_db',
+        'NAME': 'wfb',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': 'postgres',
         'PASSWORD': 'marcin7',

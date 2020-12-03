@@ -1,33 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-class Armys(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-    description = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
-class Units(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-    offensive = models.IntegerField()
-    strength = models.IntegerField()
-    ap = models.IntegerField()
-    reflex = models.BooleanField(default=False)
-    army = models.ForeignKey(Armys, on_delete=models.CASCADE, default=1)
-
-
-# class User(models.Model):
-#     login = models.CharField(max_length=64, unique=True)
-#     password = models.CharField(max_length=128)
-#     user_armies = models.ManyToManyField(Armys, through="UserArmies")
-
-
-class UserArmies(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    army = models.ForeignKey(Armys, on_delete=models.CASCADE)
-
+ARMIES_CHOICE = (
+    ("BH", "Beast Herds"),
+    ("DL", "Demonic Legion"),
+    ("DE", "Dread Elves"),
+    ("DH", "Dvarwen Holds"),
+    ("EoS", "Empire of Sonnstahl"),
+    ("HE", "Highborn Elves"),
+    ("ID", "Infernal Dwarves"),
+    ("KoE", "Kingdome of Equitaine"),
+    ("OK", "Ogre Khans"),
+    ("OG", "Orcs and Goblins"),
+    ("SA", "Saurian Ancients"),
+    ("SE", "Sylvan Elves"),
+    ("UD", "Undying Dynasties"),
+    ("VC", "Vampire Covenant"),
+    ("VS", "Vermin Swarm"),
+    ("WDG", "Warriors of the Dark Gods")
+)
 
 GAME_RANK = (
     ("master", "Master"),
@@ -44,17 +38,50 @@ OBJ = (
     (6, "Secure Target")
 )
 
+
+class Armys(models.Model):
+    name = models.CharField(max_length=32)
+    short_name = models.CharField(max_length=16)
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Units(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    offensive = models.IntegerField()
+    strength = models.IntegerField()
+    ap = models.IntegerField()
+    reflex = models.BooleanField(default=False)
+    army = models.ForeignKey(Armys, on_delete=models.CASCADE, default=1)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_army = models.CharField(max_length=32, choices=ARMIES_CHOICE)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+
 class Objectives(models.Model):
     name = models.IntegerField(choices=OBJ)
 
 
 class GameResults(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     battle_points = models.IntegerField()
     objective = models.BooleanField(default=False)
     objective_type = models.ForeignKey(Objectives, on_delete=models.CASCADE)
     game_rank = models.CharField(max_length=16, choices=GAME_RANK)
     opponent = models.CharField(max_length=64)
     date = models.DateField(auto_now_add=True)
-
-
