@@ -74,7 +74,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Objectives(models.Model):
-    name = models.IntegerField(choices=OBJ)
+    name = models.CharField(max_length=32, choices=OBJ)
     
     def __str__(self):
         return self.name
@@ -84,7 +84,7 @@ class GameResults(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     battle_points = models.IntegerField()
     objective = models.BooleanField(default=False)
-    objective_type = models.ForeignKey(Objectives, on_delete=models.CASCADE)
+    objective_type = models.CharField(max_length=32, choices=OBJ, blank=True)
     game_rank = models.CharField(max_length=16, choices=GAME_RANK)
     opponent = models.CharField(max_length=64)
     date = models.DateField(auto_now_add=True)

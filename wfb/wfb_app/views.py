@@ -197,6 +197,11 @@ class AddGameResultView(View):
         form = GameResultsForm()
         ctx = {"form": form}
         return render(request, "ranking_form.html", ctx)
+    def post(self, request):
+        form = GameResultsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("ranking-list")
 
 
 
