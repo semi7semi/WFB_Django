@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from wfb_app.views import Index, List, Calc, AddUnitView, EditUnitView, RankingList, \
-    LoginView, LogoutView, UsersList, CreateUserView, EditUserView, AddGameResultView
+    LoginView, LogoutView, UsersList, CreateUserView, EditUserView, AddGameResultView, DeleteUser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +35,8 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout-user"),
     path("users/", UsersList.as_view(), name="users-list"),
     path("add_user/", CreateUserView.as_view()),
-    path("edit_user/<int:id>/", EditUserView.as_view())
+    path("edit_user/<int:id>/", EditUserView.as_view()),
+    path("users/delete/<int:id>/", DeleteUser.as_view())
 
 
 ]

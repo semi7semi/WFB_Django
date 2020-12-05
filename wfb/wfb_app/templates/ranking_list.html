@@ -2,22 +2,54 @@
 {% block title %}{% endblock %}
 {% block content %}
 <h1>Ranking</h1>
-
+    <div class="col-1">
+        <div class="nav nav-pills nav-justified">
+            <a class="nav-link active" href="/ranking/add_result/">Dodaj wynik</a>
+        </div>
+    </div>
         <table class="table border-bottom schedules-content">
+
+            <tr>
+                <td>
+                    <form action="" method="POST">
+                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="name_sort">Sortuj</button>
+                    {% csrf_token %}
+                    </form>
+                </td>
+                <td>
+                    <form action="" method="POST">
+                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="points_sort">Sortuj</button>
+                    {% csrf_token %}
+                    </form>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                    <form action="" method="POST">
+                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="rank_sort">Sortuj</button>
+                    {% csrf_token %}
+                    </form>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
             <tr>
                 <th>Nickname</th>
-                <th>data1</th>
-                <th>data2</th>
-                <th>data3</th>
-                <th>data4</th>
-                <th>data5</th>
+                <th>Punkty</th>
+                <th>Czy wyonany objective</th>
+                <th>Jaki Objective</th>
+                <th>Ranga turnieju/gry</th>
+                <th>Przeciwnik</th>
+                <th>Data</th>
             </tr>
             {% for result in ranking %}
             <tr>
                 <td>{{ result.user }}</td>
                 <td>{{ result.battle_points }}</td>
                 <td>{{ result.objective  }}</td>
-                <td>{{ result.game_rank  }}</td>
+                <td>{{ result.get_objective_type_display  }}</td>
+                <td>{{ result.get_game_rank_display  }}</td>
                 <td>{{ result.opponent  }}</td>
                 <td>{{ result.date  }}</td>
             </tr>

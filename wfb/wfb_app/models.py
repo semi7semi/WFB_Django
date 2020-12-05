@@ -30,12 +30,12 @@ GAME_RANK = (
 )
 
 OBJ = (
-    (1, "Hold the Ground"),
-    (2, "Breakthrough"),
-    (3, "Spoils of War"),
-    (4, "King of the Hill"),
-    (5, "Capture the Flag"),
-    (6, "Secure Target")
+    ("1", "Hold the Ground"),
+    ("2", "Breakthrough"),
+    ("3", "Spoils of War"),
+    ("4", "King of the Hill"),
+    ("5", "Capture the Flag"),
+    ("6", "Secure Target")
 )
 
 
@@ -62,24 +62,6 @@ class Profile(models.Model):
     user_army = models.CharField(max_length=32, choices=ARMIES_CHOICE)
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-
-class Objectives(models.Model):
-    name = models.CharField(max_length=32, choices=OBJ)
-    
-    def __str__(self):
-        return self.name
-
-
 class GameResults(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     battle_points = models.IntegerField()
@@ -88,3 +70,9 @@ class GameResults(models.Model):
     game_rank = models.CharField(max_length=16, choices=GAME_RANK)
     opponent = models.CharField(max_length=64)
     date = models.DateField(auto_now_add=True)
+
+class Objectives(models.Model):
+    name = models.CharField(max_length=32, choices=OBJ)
+
+    def __str__(self):
+        return self.name

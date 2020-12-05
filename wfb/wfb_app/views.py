@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import FormView, ListView
 
 from wfb_app.forms import AddUnit, LogForm, RegisterUserForm, ProfileForm, EditUserForm, GameResultsForm
-from wfb_app.models import Units, Armys, GameResults, Objectives
+from wfb_app.models import Units, Armys, GameResults, Objectives, Profile
 from django.contrib.auth.models import User
 
 
@@ -39,7 +39,11 @@ def afterarmour(ap, arm, wounds):
 
 class Index(View):
     def get(self, request):
-        return render(request, "index.html")
+        users = User.objects.all()
+        no_of_games = GameResults.objects.all().count()
+
+        ctx = {"no_of_users": users.count(), "no_of_games": no_of_games}
+        return render(request, "index.html", ctx)
 
 
 class Calc(View):
@@ -155,8 +159,12 @@ class CreateUserView(View):
             user = form.save()
             user.set_password(form.cleaned_data["password"])
             user.save()
-            profile_form.save()
-            return redirect("main")
+            user_army = profile_form.cleaned_data["user_army"]
+            Profile.objects.create(
+                user_army = user_army,
+                user = user
+            )
+            return redirect("users-list")
         else:
             ctx = {"form": form, "profile_form": profile_form}
             return render(request, "user_form.html", ctx)
@@ -186,10 +194,31 @@ class UsersList(ListView):
     context_object_name = "users"
 
 
+class DeleteUser(View):
+    def get(self, request, id):
+        user = User.objects.get(pk=id)
+        user.delete()
+        return redirect("users-list")
+
+
 class RankingList(View):
     def get(self, request):
-        ranking = GameResults.objects.all().order_by("date")
+        ranking = GameResults.objects.all()
         return render(request, "ranking_list.html", {"ranking": ranking})
+    def post(self, request):
+        if request.POST.get("option") == "name_sort":
+            ranking = GameResults.objects.all().order_by("user", "-battle_points")
+            return render(request, "ranking_list.html", {"ranking": ranking})
+        if request.POST.get("option") == "points_sort":
+            ranking = GameResults.objects.all().order_by("-battle_points")
+            return render(request, "ranking_list.html", {"ranking": ranking})
+        if request.POST.get("option") == "rank_sort":
+            ranking = GameResults.objects.all().order_by("-game_rank")
+            return render(request, "ranking_list.html", {"ranking": ranking})
+        else:
+            ranking = GameResults.objects.all()
+            return render(request, "ranking_list.html", {"ranking": ranking})
+
 
 
 class AddGameResultView(View):
@@ -202,72 +231,6 @@ class AddGameResultView(View):
         if form.is_valid():
             form.save()
             return redirect("ranking-list")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class Edit_unit(View):
-#     def get(self, request, id):
-#         unit = Units.objects.get(pk=id)
-#         return render(request, "edit_unit.html", {"unit": unit})
-#     def post(self, request, id):
-#         unit = Units.objects.get(pk=id)
-#         offensive = request.POST.get('offensive')
-#         strength = request.POST.get('strength')
-#         ap = request.POST.get('ap')
-#         reflex_str = request.POST.get('reflex')
-#         reflex = reflex_str == "on"
-#         if not offensive or not strength or not ap:
-#             error = "Wypelnij wszystkie pola"
-#             return render(request, "edit_unit.html", {"error": error})
-#         else:
-#             unit.offensive = offensive
-#             unit.strength = strength
-#             unit.ap = ap
-#             unit.reflex = reflex
-#             unit.save()
-#             return redirect('/')
-
-
-# class Add_unit(View):
-#     def get(self, request):
-#         armys = Armys.objects.all()
-#         return render(request, "add_unit.html", {"armys": armys})
-#     def post(self, request):
-#         name = request.POST.get('name')
-#         offensive = request.POST.get('offensive')
-#         strength = request.POST.get('strength')
-#         ap = request.POST.get('ap')
-#         reflex_str = request.POST.get('reflex')
-#         reflex = reflex_str == "on"
-#         army_id = int(request.POST.get('army'))
-#         print(army_id)
-#         if not name or not offensive or not strength or not ap:
-#             error = "Wypelnij wszystkie pola"
-#             return render(request, "add_unit.html", {"error": error})
-#         else:
-#             units = Units()
-#             units.name = name
-#             units.offensive = offensive
-#             units.strength = strength
-#             units.ap = ap
-#             units.reflex = reflex
-#             units.army = Armys.objects.get(pk=army_id)
-#             units.save()
-#             return redirect('/')
+        else:
+            ctx = {"form": form}
+            return render(request, "ranking_form.html", ctx)
