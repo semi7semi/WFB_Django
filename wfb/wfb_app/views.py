@@ -37,11 +37,25 @@ def afterarmour(ap, arm, wounds):
         wounds_armour = wounds / 6
     return round(wounds_armour, 1)
 
+
+def takeSecond(elem):
+    return elem[1]
+
+
 class Index(View):
     def get(self, request):
+        score = []
+        result = []
         users = User.objects.all()
         no_of_games = GameResults.objects.all().count()
-        ctx = {"no_of_users": users.count(), "no_of_games": no_of_games}
+        for user in users:
+            games = GameResults.objects.filter(user=user)
+            total = 0
+            for game in games:
+                total += game.battle_points
+            result.append([total, user])
+        result.sort(reverse=True)
+        ctx = {"no_of_users": users.count(), "no_of_games": no_of_games, "result": result}
         return render(request, "index.html", ctx)
 
 

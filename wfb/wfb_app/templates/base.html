@@ -17,18 +17,20 @@
                 Aplikacja <span>WFB</span>
             </a>
          <div class="d-flex justify-content-around">
-             {% if request.user %}
+             {% if request.user.is_authenticated %}
              <h4 class="text-light mr-3">Witaj {{ request.user.username }}</h4>
              <h4 class="text-light mr-3">
-                 <a href="/login/">
-                     <span>Login</span>
-                 </a>
                  <a href="/logout/">
                      <span>Logout</span>
                  </a>
              </h4>
              {% else %}
              <h4 class="text-light mr-3">Witaj nieznajomy</h4>
+             <h4 class="text-light mr-3">
+                 <a href="/login/">
+                     <span>Login</span>
+                 </a>
+             </h4>
              {% endif %}
          </div>
         </nav>

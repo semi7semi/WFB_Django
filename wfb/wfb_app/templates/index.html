@@ -30,17 +30,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% for user in result %}
                             <tr class="d-flex">
-                                <td class="col-3">Semi</td>
-                                <td class="col-2">55</td>
-                                <td class="col-2"><a href=""><button type="button" class="btn btn-primary rounded-0">Szczegóły</button></a></td>
+                                <td class="col-3">{{ user.1.username }}</td>
+                                <td class="col-2">{{ user.0 }}</td>
+                                <td class="col-2"><a href="/user_details/{{ user.1.id }}/"><button type="button" class="btn btn-primary rounded-0">Szczegóły</button></a></td>
                             </tr>
-                            <tr class="d-flex">
-                                <td class="col-3">Semi</td>
-                                <td class="col-2">553</td>
-                                <td class="col-2"><a href=""><button type="button" class="btn btn-primary rounded-0">Szczegóły</button>
-                                </a></td>
-                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
