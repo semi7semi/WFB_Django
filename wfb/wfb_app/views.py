@@ -41,7 +41,6 @@ class Index(View):
     def get(self, request):
         users = User.objects.all()
         no_of_games = GameResults.objects.all().count()
-
         ctx = {"no_of_users": users.count(), "no_of_games": no_of_games}
         return render(request, "index.html", ctx)
 
@@ -194,6 +193,17 @@ class UsersList(ListView):
     context_object_name = "users"
 
 
+class UserDetailsView(View):
+    def get(self, request, id):
+        user = User.objects.get(pk=id)
+        ranking = GameResults.objects.filter(user=user).order_by("date")
+        total = 0
+        for score in ranking:
+            total += score.battle_points
+        ctx = {"ranking": ranking, "total": total}
+        return render(request, "user_details.html", ctx)
+
+
 class DeleteUser(View):
     def get(self, request, id):
         user = User.objects.get(pk=id)
@@ -218,7 +228,6 @@ class RankingList(View):
         else:
             ranking = GameResults.objects.all()
             return render(request, "ranking_list.html", {"ranking": ranking})
-
 
 
 class AddGameResultView(View):

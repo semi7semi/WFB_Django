@@ -71,6 +71,8 @@ class GameResults(models.Model):
     opponent = models.CharField(max_length=64)
     date = models.DateField(auto_now_add=True)
 
+
+
 class Objectives(models.Model):
     name = models.CharField(max_length=32, choices=OBJ)
 

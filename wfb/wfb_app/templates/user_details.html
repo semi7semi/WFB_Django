@@ -10,31 +10,6 @@
         <table class="table border-bottom schedules-content">
 
             <tr>
-                <td>
-                    <form action="" method="POST">
-                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="name_sort">Sortuj</button>
-                    {% csrf_token %}
-                    </form>
-                </td>
-                <td>
-                    <form action="" method="POST">
-                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="points_sort">Sortuj</button>
-                    {% csrf_token %}
-                    </form>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                    <form action="" method="POST">
-                    <button class="btn btn-secondary rounded-1" type="submit" name="option" value="rank_sort">Sortuj</button>
-                    {% csrf_token %}
-                    </form>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <tr>
                 <th>Nickname</th>
                 <th>Punkty</th>
                 <th>Czy wykonany objective</th>
@@ -45,7 +20,6 @@
             </tr>
             {% for result in ranking %}
             <tr>
-                <td><a href="/user_details/{{ result.user.id }}/">{{ result.user }}</a></td>
                 <td>{{ result.battle_points }}</td>
                 <td>{{ result.objective  }}</td>
                 <td>{{ result.get_objective_type_display  }}</td>
@@ -54,6 +28,9 @@
                 <td>{{ result.date  }}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <td>Total: {{ total }}</td>
+            </tr>
         </table>
 <div class="row">
     <div class="col-2">
