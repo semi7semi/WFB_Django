@@ -17,7 +17,7 @@ urlpatterns = [
     path("ranking/", RankingList.as_view(), name="ranking-list"),
     path("ranking/add_result/", AddGameResultView.as_view()),
 
-    path("login/", LoginView.as_view()),
+    path("accounts/login/", LoginView.as_view()),
     path("logout/", LogoutView.as_view(), name="logout-user"),
     path("users/", UsersList.as_view(), name="users-list"),
     path("add_user/", CreateUserView.as_view()),

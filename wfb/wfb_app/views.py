@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.views import View
 from django.views.generic import FormView, ListView
 
@@ -44,7 +44,6 @@ def takeSecond(elem):
 
 class Index(View):
     def get(self, request):
-        score = []
         result = []
         users = User.objects.all()
         no_of_games = GameResults.objects.all().count()
@@ -53,7 +52,8 @@ class Index(View):
             total = 0
             for game in games:
                 total += game.battle_points
-            result.append([total, user])
+            #  user.id bo przy sortowaniu tych samych wynikow python nie ogarnia :)
+            result.append([total, user.id, user])
         result.sort(reverse=True)
         ctx = {"no_of_users": users.count(), "no_of_games": no_of_games, "result": result}
         return render(request, "index.html", ctx)
@@ -202,9 +202,10 @@ class EditUserView(View):
             return redirect("users-list")
 
 
-class UsersList(ListView):
+class UsersList(LoginRequiredMixin, ListView):
     model = User
     context_object_name = "users"
+    ordering = "username"
 
 
 class UserDetailsView(View):
@@ -237,14 +238,14 @@ class RankingList(View):
             ranking = GameResults.objects.all().order_by("-battle_points")
             return render(request, "ranking_list.html", {"ranking": ranking})
         if request.POST.get("option") == "rank_sort":
-            ranking = GameResults.objects.all().order_by("-game_rank")
+            ranking = GameResults.objects.all().order_by("-game_rank", "-battle_points")
             return render(request, "ranking_list.html", {"ranking": ranking})
         else:
             ranking = GameResults.objects.all()
             return render(request, "ranking_list.html", {"ranking": ranking})
 
 
-class AddGameResultView(View):
+class AddGameResultView(LoginRequiredMixin, View):
     def get(self, request):
         form = GameResultsForm()
         ctx = {"form": form}
@@ -252,7 +253,9 @@ class AddGameResultView(View):
     def post(self, request):
         form = GameResultsForm(request.POST)
         if form.is_valid():
-            form.save()
+            result = form.save(commit=False)
+            result.user = request.user
+            result.save()
             return redirect("ranking-list")
         else:
             ctx = {"form": form}

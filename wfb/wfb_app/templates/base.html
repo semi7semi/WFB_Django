@@ -27,8 +27,13 @@
              {% else %}
              <h4 class="text-light mr-3">Witaj nieznajomy</h4>
              <h4 class="text-light mr-3">
-                 <a href="/login/">
+                 <a href="accounts/login/">
                      <span>Login</span>
+                 </a>
+             </h4>
+             <h4 class="text-light mr-3">
+                 <a href="/add_user/">
+                     <span>Register</span>
                  </a>
              </h4>
              {% endif %}
@@ -44,26 +49,25 @@
                             <span>Pulpit</span>
                         </a>
                     </li>
+                    {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/users/">
                             <span>Lista graczy</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/add_user/">
-                            <span>Dodaj gracza</span>
-                        </a>
-                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="/ranking/">
                             <span>Ranking</span>
                         </a>
                     </li>
+                    {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/calculator/">
                             <span>Kalkulator</span>
                         </a>
                     </li>
+                    {% endif %}
                     </ul>
             <div class="m-4 p-3 width-medium text-color-darker">
 

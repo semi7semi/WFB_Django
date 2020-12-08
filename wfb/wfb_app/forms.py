@@ -69,7 +69,7 @@ class EditUserForm(forms.ModelForm):
 class GameResultsForm(forms.ModelForm):
     class Meta:
         model = GameResults
-        fields = "__all__"
+        fields = ["battle_points", "objective", "objective_type", "game_rank", "opponent"]
         labels = {
             "user": "Nick",
             "battle_points": "Punkty",
