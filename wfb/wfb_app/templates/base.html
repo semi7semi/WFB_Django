@@ -13,9 +13,13 @@
 <body>
     <header class="page-header">
         <nav class="navbar navbar-expand-lg justify-content-between">
+
             <a href="/" class="navbar-brand main-logo main-logo-smaller">
-                Aplikacja <span>WFB</span>
+                <img src="/static/images/bannerDWm.png" alt="logo" width="80">
+                <span>Drobne Wałeczki</span>
+
             </a>
+
          <div class="d-flex justify-content-around">
              {% if request.user.is_authenticated %}
              <h4 class="text-light mr-3">Witaj {{ request.user.username }}</h4>
@@ -27,7 +31,7 @@
              {% else %}
              <h4 class="text-light mr-3">Witaj nieznajomy</h4>
              <h4 class="text-light mr-3">
-                 <a href="accounts/login/">
+                 <a href="/accounts/login/">
                      <span>Login</span>
                  </a>
              </h4>

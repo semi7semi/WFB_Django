@@ -3,9 +3,11 @@
 {% block content %}
 <h1>Ranking</h1>
     <div class="col-1">
+        {% if request.user.is_authenticated %}
         <div class="nav nav-pills nav-justified">
             <a class="nav-link active" href="/ranking/add_result/">Dodaj wynik</a>
         </div>
+        {% endif %}
     </div>
         <table class="table border-bottom schedules-content">
 
