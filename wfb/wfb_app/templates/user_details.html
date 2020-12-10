@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{% endblock %}
 {% block content %}
-<h1>Ranking</h1>
+<h1>Szczegóły gracza: {{ request.user.username }} ( {{ request.user.profile.user_army }} )</h1>
     <div class="col-1">
         {% if request.user.is_authenticated %}
         <div class="nav nav-pills nav-justified">

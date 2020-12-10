@@ -15,7 +15,6 @@ def user():
     user = User.objects.create(
         username="Stefan",
         password="1234",
-        password_2="1234",
         email="aaa@aa.pl")
     return user
 
