@@ -36,13 +36,13 @@ class Calc(View):
         attacks = int(request.POST.get('attacks'))
         defensive = int(request.POST.get('defensive'))
         resistance = int(request.POST.get('resistance'))
-        if request.POST.get('option') == "delete":
-            unit = Units.objects.get(pk=unit_id)
-            unit.delete()
-            return redirect('/')
-        if request.POST.get('option') == "edit":
-            unit = Units.objects.get(pk=unit_id)
-            return redirect(f'/edit_unit/{unit.id}/')
+        # if request.POST.get('option') == "delete":
+        #     unit = Units.objects.get(pk=unit_id)
+        #     unit.delete()
+        #     return redirect('/')
+        # if request.POST.get('option') == "edit":
+        #     unit = Units.objects.get(pk=unit_id)
+        #     return redirect(f'/edit_unit/{unit.id}/')
         if request.POST.get('option') == "fight":
             unit = Units.objects.get(pk=unit_id)
             if unit.reflex:
@@ -103,6 +103,19 @@ class EditUnitView(View):
         if form.is_valid():
             form.save()
             return redirect("units-list")
+
+
+class ArmyListView(View):
+    def get(self, request):
+        army_list = Armys.objects.all().order_by("name")
+        return render(request, "army_list.html", {"army_list": army_list})
+
+class ArmyDetailsView(View):
+    def get(selfself, request, id):
+        army = Armys.objects.get(pk=id)
+        units = Units.objects.filter(army=army.id)
+        ctx = {"army": army, "units": units}
+        return render(request, "army_details.html", ctx)
 
 
 class LoginView(FormView):

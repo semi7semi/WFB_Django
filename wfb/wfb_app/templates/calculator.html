@@ -4,15 +4,17 @@
 <h1>WFB Battle Calculator</h1>
 {% if not hit %}
         <form action="" method="POST">
+            <button type="button" class="btn btn-color rounded-1 pt-0 pb-0 pr-4 pl-4"><a href="../army_list/">Lista armii</a></button><br>
+            <p></p>
             <button type="button" class="btn btn-color rounded-1 pt-0 pb-0 pr-4 pl-4"><a href="../units_list/">Lista jednostek</a></button><br>
             <label class="mt-4 ml-4 mr-4" for="name">Wybierz jednostke:</label>
             <select class="p-1" id="name" name="name">
                 {% for unit in units_list %}
                 <option class="btn btn-primary rounded-0" value="{{ unit.id }}">{{ unit.name }}</option>
                 {% endfor %}
-            </select>
-            <button class="btn btn-secondary rounded-1" type="submit" name="option" value="delete">Usun</button>
-            <button class="btn btn-secondary rounded-1" type="submit" name="option" value="edit">Edytuj</button><br>
+            </select><br>
+<!--            <button class="btn btn-secondary rounded-1" type="submit" name="option" value="delete">Usun</button>-->
+<!--            <button class="btn btn-secondary rounded-1" type="submit" name="option" value="edit">Edytuj</button><br>-->
             <label class="mt-4 ml-4 mr-4" for="att">Podaj ilosc atakow:</label>
             <input class="p-1" type="number" id="att" name="attacks" min="1" value="10"><br>
             <label class="mt-4 ml-4 mr-4" for="def">Podaj Defensive Skill przeciwnika:</label>
