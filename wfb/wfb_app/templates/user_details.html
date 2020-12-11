@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{% endblock %}
 {% block content %}
-<h1>Szczegóły gracza: {{ request.user.username }} ( {{ request.user.profile.user_army }} )</h1>
+<h1>Szczegóły gracza: {{ user.username }} ( {{ user.profile.user_army }} )</h1>
     <div class="col-1">
-        {% if request.user.is_authenticated %}
+        {% if user.username == request.user.username %}
         <div class="nav nav-pills nav-justified">
             <a class="nav-link active" href="/ranking/add_result/">Dodaj wynik</a>
         </div>
@@ -12,7 +12,6 @@
         <table class="table border-bottom schedules-content">
 
             <tr>
-                <th>Nickname</th>
                 <th>Punkty</th>
                 <th>Czy wykonany objective</th>
                 <th>Jaki Objective</th>
@@ -23,7 +22,11 @@
             {% for result in ranking %}
             <tr>
                 <td>{{ result.battle_points }}</td>
-                <td>{{ result.objective  }}</td>
+                {% if result.objective  %}
+                    <td style="color: green">Tak</td>
+                {% else %}
+                    <td style="color: red">Nie</td>
+                {% endif %}
                 <td>{{ result.get_objective_type_display  }}</td>
                 <td>{{ result.get_game_rank_display  }}</td>
                 <td>{{ result.opponent  }}</td>

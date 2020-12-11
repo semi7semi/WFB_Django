@@ -27,7 +27,7 @@ class Index(View):
         return render(request, "index.html", ctx)
 
 
-class Calc(View):
+class Calc(LoginRequiredMixin, View):
     def get(self, request):
         units_list = Units.objects.all()
         return render(request, "calculator.html", {"units_list": units_list})
@@ -73,13 +73,13 @@ class Calc(View):
                                "unit": unit})
 
 
-class List(View):
+class List(LoginRequiredMixin, View):
     def get(self, request):
         units_list = Units.objects.all().order_by("name")
         return render(request, "units_list.html", {"units_list": units_list})
 
 
-class AddUnitView(View):
+class AddUnitView(LoginRequiredMixin, View):
     def get(self, request):
         form = AddUnit()
         ctx = {"form": form}
@@ -88,10 +88,10 @@ class AddUnitView(View):
         form = AddUnit(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("units-list")
+            return redirect("calc-view")
 
 
-class EditUnitView(View):
+class EditUnitView(LoginRequiredMixin, View):
     def get(self, request, id):
         unit = Units.objects.get(pk=id)
         form = AddUnit(instance=unit)
@@ -105,12 +105,19 @@ class EditUnitView(View):
             return redirect("units-list")
 
 
-class ArmyListView(View):
+class DeleteUnitView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        unit = Units.objects.get(pk=id)
+        unit.delete()
+        return redirect("calc-view")
+
+
+class ArmyListView(LoginRequiredMixin, View):
     def get(self, request):
         army_list = Armys.objects.all().order_by("name")
         return render(request, "army_list.html", {"army_list": army_list})
 
-class ArmyDetailsView(View):
+class ArmyDetailsView(LoginRequiredMixin, View):
     def get(selfself, request, id):
         army = Armys.objects.get(pk=id)
         units = Units.objects.filter(army=army.id)
@@ -164,7 +171,7 @@ class CreateUserView(View):
             return render(request, "user_form.html", ctx)
 
 
-class EditUserView(View):
+class EditUserView(LoginRequiredMixin, View):
     def get(selfself, request, id):
         user = User.objects.get(pk=id)
         form = EditUserForm(instance=user)
@@ -196,7 +203,7 @@ class UserDetailsView(View):
         total = 0
         for score in ranking:
             total += score.battle_points
-        ctx = {"ranking": ranking, "total": total}
+        ctx = {"ranking": ranking, "total": total, "user": user}
         return render(request, "user_details.html", ctx)
 
 
