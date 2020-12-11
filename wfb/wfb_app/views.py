@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 
 
 class Index(View):
+    # strona główna, 5ciu najleprzysz graczy, logowanie, linki
     def get(self, request):
         result = []
         users = User.objects.all()
@@ -28,6 +29,8 @@ class Index(View):
 
 
 class Calc(LoginRequiredMixin, View):
+    # Funkcjionalnosc Kalkulator, wylicza statystyke walki przy podanych parametrach przez uzytkownika
+    # tylko dla zalogowanych
     def get(self, request):
         units_list = Units.objects.all()
         return render(request, "calculator.html", {"units_list": units_list})
@@ -74,12 +77,16 @@ class Calc(LoginRequiredMixin, View):
 
 
 class List(LoginRequiredMixin, View):
+    # Lista wszystkich oddzialow, nie zaleznie od armii
+    # tylko dla zalogowanych
     def get(self, request):
         units_list = Units.objects.all().order_by("name")
         return render(request, "units_list.html", {"units_list": units_list})
 
 
 class AddUnitView(LoginRequiredMixin, View):
+    # dodanawnie nowej jednostki do DB
+    # tylko dla zalogowanych
     def get(self, request):
         form = AddUnit()
         ctx = {"form": form}
@@ -92,6 +99,8 @@ class AddUnitView(LoginRequiredMixin, View):
 
 
 class EditUnitView(LoginRequiredMixin, View):
+    # Edycja jednostki i zapis do DB
+    # tylko dla zalogowanych
     def get(self, request, id):
         unit = Units.objects.get(pk=id)
         form = AddUnit(instance=unit)
@@ -106,6 +115,8 @@ class EditUnitView(LoginRequiredMixin, View):
 
 
 class DeleteUnitView(LoginRequiredMixin, View):
+    # Usuwanie jednostki z DB
+    # tylko dla zalogowanych
     def get(self, request, id):
         unit = Units.objects.get(pk=id)
         unit.delete()
@@ -113,11 +124,16 @@ class DeleteUnitView(LoginRequiredMixin, View):
 
 
 class ArmyListView(LoginRequiredMixin, View):
+    # lista wszystkich dostepnych armii
+    # linki do poszczegolnych jednostek armijnych
+    # tylko dla zalogowanych
     def get(self, request):
         army_list = Armys.objects.all().order_by("name")
         return render(request, "army_list.html", {"army_list": army_list})
 
 class ArmyDetailsView(LoginRequiredMixin, View):
+    # szczegoly armii, wszystkie jednostki dodane dla danej armii
+    # tylko dla zalogowanych
     def get(selfself, request, id):
         army = Armys.objects.get(pk=id)
         units = Units.objects.filter(army=army.id)
@@ -126,6 +142,7 @@ class ArmyDetailsView(LoginRequiredMixin, View):
 
 
 class LoginView(FormView):
+    # logowanie i authentykacja
     form_class = LogForm
     template_name = "login_form.html"
     success_url = "/"
@@ -142,12 +159,14 @@ class LoginView(FormView):
 
 
 class LogoutView(View):
+    # wylogowanie
     def get(self, request):
         logout(request)
         return redirect("/")
 
 
 class CreateUserView(View):
+    # Rejestracja nowego uzytkownika
     def get(self, request):
         form = RegisterUserForm()
         profile_form = ProfileForm()
@@ -172,6 +191,7 @@ class CreateUserView(View):
 
 
 class EditUserView(LoginRequiredMixin, View):
+    # edycja konta urzytkownika, email, armia
     def get(selfself, request, id):
         user = User.objects.get(pk=id)
         form = EditUserForm(instance=user)
@@ -191,12 +211,15 @@ class EditUserView(LoginRequiredMixin, View):
 
 
 class UsersList(LoginRequiredMixin, ListView):
+    # lista zarejestrowanych uzytkownikow
+    # tylko dla zalogowanych
     model = User
     context_object_name = "users"
     ordering = "username"
 
 
 class UserDetailsView(View):
+    # Szczegoly uzytkownika, wszsytkie bitwy, punkty, armia
     def get(self, request, id):
         user = User.objects.get(pk=id)
         ranking = GameResults.objects.filter(user=user).order_by("date")
@@ -207,7 +230,11 @@ class UserDetailsView(View):
         return render(request, "user_details.html", ctx)
 
 
-class DeleteUser(View):
+class DeleteUser(LoginRequiredMixin, View):
+    # usuwanie uzytkownika
+    # tylko dla mnie
+
+    # musze zabezpieczyc jeszcze!!!!
     def get(self, request, id):
         user = User.objects.get(pk=id)
         user.delete()
@@ -215,6 +242,8 @@ class DeleteUser(View):
 
 
 class RankingList(View):
+    # Ranking wszsytkich uzytkownikow, z punktami
+    # sortowanie po wynikach, rangze itd
     def get(self, request):
         ranking = GameResults.objects.all()
         return render(request, "ranking_list.html", {"ranking": ranking})
@@ -234,6 +263,8 @@ class RankingList(View):
 
 
 class AddGameResultView(LoginRequiredMixin, View):
+    # dodawanie nowych wynikow do rankingu
+    # tylko dla zalogowanych
     def get(self, request):
         form = GameResultsForm()
         ctx = {"form": form}
