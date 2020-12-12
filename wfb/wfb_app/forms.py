@@ -17,9 +17,6 @@ class AddUnit(forms.ModelForm):
             "reflex": "Czy ma Lightning Reflexes",
             "armys": "Armia"
         }
-        # widgets = {
-        #     "army": forms.ChoiceField()
-        # }
 
 
 class LogForm(forms.Form):

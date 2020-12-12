@@ -24,6 +24,7 @@ class Index(View):
             #  user.id bo przy sortowaniu tych samych wynikow python nie ogarnia :)
             result.append([total, user.id, user])
         result.sort(reverse=True)
+        result = result[:5]
         ctx = {"no_of_users": users.count(), "no_of_games": no_of_games, "result": result}
         return render(request, "index.html", ctx)
 
@@ -39,13 +40,6 @@ class Calc(LoginRequiredMixin, View):
         attacks = int(request.POST.get('attacks'))
         defensive = int(request.POST.get('defensive'))
         resistance = int(request.POST.get('resistance'))
-        # if request.POST.get('option') == "delete":
-        #     unit = Units.objects.get(pk=unit_id)
-        #     unit.delete()
-        #     return redirect('/')
-        # if request.POST.get('option') == "edit":
-        #     unit = Units.objects.get(pk=unit_id)
-        #     return redirect(f'/edit_unit/{unit.id}/')
         if request.POST.get('option') == "fight":
             unit = Units.objects.get(pk=unit_id)
             if unit.reflex:
@@ -130,6 +124,7 @@ class ArmyListView(LoginRequiredMixin, View):
     def get(self, request):
         army_list = Armys.objects.all().order_by("name")
         return render(request, "army_list.html", {"army_list": army_list})
+
 
 class ArmyDetailsView(LoginRequiredMixin, View):
     # szczegoly armii, wszystkie jednostki dodane dla danej armii
@@ -222,7 +217,7 @@ class UserDetailsView(View):
     # Szczegoly uzytkownika, wszsytkie bitwy, punkty, armia
     def get(self, request, id):
         user = User.objects.get(pk=id)
-        ranking = GameResults.objects.filter(user=user).order_by("date")
+        ranking = GameResults.objects.filter(user=user).order_by("-date")
         total = 0
         for score in ranking:
             total += score.battle_points
@@ -255,7 +250,7 @@ class RankingList(View):
             ranking = GameResults.objects.all().order_by("-battle_points")
             return render(request, "ranking_list.html", {"ranking": ranking})
         if request.POST.get("option") == "rank_sort":
-            ranking = GameResults.objects.all().order_by("-game_rank", "-battle_points")
+            ranking = GameResults.objects.all().order_by("-game_rank", "-date")
             return render(request, "ranking_list.html", {"ranking": ranking})
         else:
             ranking = GameResults.objects.all()
